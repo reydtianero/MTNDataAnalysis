@@ -1,13 +1,17 @@
-﻿using MTNDataAnalysis.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="CallDataRecordContext.cs" company="YouSource Inc.">
+//     Copyright (c) YouSource Inc.. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 namespace MTNDataAnalysis.Context
 {
+    using System;
+    using System.Collections.Generic;
+    using MTNDataAnalysis.Models;
+
+    /// <summary>
+    /// The context by which the chain operates on 
+    /// </summary>
     public class CallDataRecordContext : BaseContext
     {
         /// <summary>
@@ -32,7 +36,7 @@ namespace MTNDataAnalysis.Context
         public event Action<string, bool> ProcessStepChanged;
 
         /// <summary>
-        /// Gets or sets the location of the files to be procesed
+        /// Gets or sets the location of the files to be processed
         /// </summary>
         /// <value>
         /// The input path.
@@ -40,7 +44,7 @@ namespace MTNDataAnalysis.Context
         public string InputPath { get; set; }
 
         /// <summary>
-        /// Gets or sets the complete path of the third party decompressor
+        /// Gets or sets the complete path of the third party de-compressor
         /// </summary>
         /// <value>
         /// The extractor file path.
@@ -94,32 +98,6 @@ namespace MTNDataAnalysis.Context
         public string OutputPath { get; set; }
 
         /// <summary>
-        /// Called when [process step changed].
-        /// </summary>
-        /// <param name="step">The step.</param>
-        public void OnProcessStepChanged(string step, bool abort)
-        {
-            var evt = this.ProcessStepChanged;
-            if (evt != null)
-            {
-                evt(step, abort);
-            }
-        }
-
-        /// <summary>
-        /// Called when [process progress changed].
-        /// </summary>
-        /// <param name="progress">The progress.</param>
-        public void OnProcessProgressChanged(int progress)
-        {
-            var evt = this.ProcessProgressChanged;
-            if (evt != null)
-            {
-                evt(progress);
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the [group by] field for the summary.
         /// </summary>
         /// <value>
@@ -142,5 +120,32 @@ namespace MTNDataAnalysis.Context
         /// The end time.
         /// </value>
         public DateTime EndTime { get; set; }
+
+        /// <summary>
+        /// Called when [process step changed].
+        /// </summary>
+        /// <param name="step">The step.</param>
+        /// <param name="abort">if set to <c>true</c> [abort].</param>
+        public void OnProcessStepChanged(string step, bool abort)
+        {
+            var evt = this.ProcessStepChanged;
+            if (evt != null)
+            {
+                evt(step, abort);
+            }
+        }
+
+        /// <summary>
+        /// Called when [process progress changed].
+        /// </summary>
+        /// <param name="progress">The progress.</param>
+        public void OnProcessProgressChanged(int progress)
+        {
+            var evt = this.ProcessProgressChanged;
+            if (evt != null)
+            {
+                evt(progress);
+            }
+        }
     }
 }

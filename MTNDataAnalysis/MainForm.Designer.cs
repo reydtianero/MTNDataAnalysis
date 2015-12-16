@@ -157,7 +157,7 @@
             // progressUpdateBGWorker
             // 
             this.progressUpdateBGWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ProgressUpdateBGWorker_DoWork);
-            this.progressUpdateBGWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.progressUpdateBGWorker_ProgressChanged);
+            this.progressUpdateBGWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.ProgressUpdateBGWorker_ProgressChanged);
             // 
             // lblPercentage
             // 

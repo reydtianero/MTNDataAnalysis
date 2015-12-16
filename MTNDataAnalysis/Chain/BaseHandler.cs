@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="BaseHandler.cs" company="Global Supply Chain Services (Ltd)">
-//     Copyright (c) GlobalTrack. All rights reserved.
+// <copyright file="BaseHandler.cs" company="YouSource Inc.">
+//     Copyright (c) YouSource Inc.. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 namespace MTNDataAnalysis.Chain

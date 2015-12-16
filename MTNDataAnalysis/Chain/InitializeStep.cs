@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Initializer.cs" company="Global Supply Chain Services (Ltd)">
-//     Copyright (c) GlobalTrack. All rights reserved.
+// <copyright file="InitializeStep.cs" company="YouSource Inc.">
+//     Copyright (c) YouSource Inc.. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 namespace MTNDataAnalysis.Chain
@@ -26,13 +26,11 @@ namespace MTNDataAnalysis.Chain
             context.OnProcessStepChanged("Initializing...", false);
             try
             {
-
                 var thisDirectory = new DirectoryInfo(context.InputPath);
 
                 if (context.OutputPath == string.Empty)
                 {
                     context.OutputPath = thisDirectory.CreateSubdirectory("Output").FullName;
-
                 }
                 else
                 {

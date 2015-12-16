@@ -10,3 +10,9 @@ C:\Users\apanaligan\Desktop\MTNDataAnalysis_v4\MTNDataAnalysis\MTNDataAnalysis\o
 C:\Users\rtianero\Documents\Work\GlobalTrack\MTNDataAnalysis\MTNDataAnalysis\MTNDataAnalysis\bin\Release\MTNDataAnalysis.exe.config
 C:\Users\rtianero\Documents\Work\GlobalTrack\MTNDataAnalysis\MTNDataAnalysis\MTNDataAnalysis\obj\Release\MTNDataAnalysis.exe
 C:\Users\rtianero\Documents\Work\GlobalTrack\MTNDataAnalysis\MTNDataAnalysis\MTNDataAnalysis\obj\Release\MTNDataAnalysis.pdb
+C:\Users\rtianero\Documents\Work\GlobalTrack\MTNDataAnalysis\MTNDataAnalysis\MTNDataAnalysis\bin\Release\MTNDataAnalysis.exe
+C:\Users\rtianero\Documents\Work\GlobalTrack\MTNDataAnalysis\MTNDataAnalysis\MTNDataAnalysis\bin\Release\MTNDataAnalysis.pdb
+C:\Users\rtianero\Documents\Work\GlobalTrack\MTNDataAnalysis\MTNDataAnalysis\MTNDataAnalysis\obj\Release\MTNDataAnalysis.csprojResolveAssemblyReference.cache
+C:\Users\rtianero\Documents\Work\GlobalTrack\MTNDataAnalysis\MTNDataAnalysis\MTNDataAnalysis\obj\Release\MTNDataAnalysis.MainForm.resources
+C:\Users\rtianero\Documents\Work\GlobalTrack\MTNDataAnalysis\MTNDataAnalysis\MTNDataAnalysis\obj\Release\MTNDataAnalysis.Properties.Resources.resources
+C:\Users\rtianero\Documents\Work\GlobalTrack\MTNDataAnalysis\MTNDataAnalysis\MTNDataAnalysis\obj\Release\MTNDataAnalysis.csproj.GenerateResource.Cache

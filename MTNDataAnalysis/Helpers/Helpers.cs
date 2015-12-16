@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="IOHelpers.cs" company="Global Supply Chain Services (Ltd)">
-//     Copyright (c) GlobalTrack. All rights reserved.
+// <copyright file="Helpers.cs" company="YouSource Inc.">
+//     Copyright (c) YouSource Inc.. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 namespace MTNDataAnalysis.Helpers
@@ -21,8 +21,8 @@ namespace MTNDataAnalysis.Helpers
         /// <summary>
         /// Sets the property in GUI thread.
         /// </summary>
-        /// <typeparam name="C"></typeparam>
-        /// <typeparam name="V"></typeparam>
+        /// <typeparam name="C">The Control</typeparam>
+        /// <typeparam name="V">The Value</typeparam>
         /// <param name="control">The control.</param>
         /// <param name="property">The property.</param>
         /// <param name="value">The value.</param>
@@ -35,36 +35,45 @@ namespace MTNDataAnalysis.Helpers
         {
             var memberExpression = property.Body as MemberExpression;
             if (memberExpression == null)
+            {
                 throw new ArgumentException("The 'property' expression must specify a property on the control.");
+            }
 
             var propertyInfo = memberExpression.Member as PropertyInfo;
             if (propertyInfo == null)
+            {
                 throw new ArgumentException("The 'property' expression must specify a property on the control.");
+            }
 
             if (control.InvokeRequired)
+            {
                 control.Invoke(
                     (Action<C, Expression<Func<C, V>>, V>)SetPropertyInGuiThread,
-                    new object[] { control, property, value }
-                );
+                    new object[] { control, property, value });
+            }
             else
+            {
                 propertyInfo.SetValue(control, value, null);
+            }
         }
 
         /// <summary>
-        /// Byteses to string.
+        /// Converts Bytes to a  human readable string.
         /// </summary>
         /// <param name="byteCount">The byte count.</param>
         /// <returns>Returns a human readable file size</returns>
         public static string BytesToString(long byteCount)
         {
-            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
+            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
             if (byteCount == 0)
+            {
                 return "0" + suf[0];
-            long Kbytes = Math.Abs(byteCount);
-            int place = Convert.ToInt32(Math.Floor(Math.Log(Kbytes, 1024)));
-            double num = Math.Round(Kbytes / Math.Pow(1024, place), 1);
+            }
+
+            long kbytes = Math.Abs(byteCount);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(kbytes, 1024)));
+            double num = Math.Round(kbytes / Math.Pow(1024, place), 1);
             return (Math.Sign(byteCount) * num).ToString() + suf[place];
         }
-
     }
 }

@@ -1,15 +1,15 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Extractor.cs" company="Global Supply Chain Services (Ltd)">
-//     Copyright (c) GlobalTrack. All rights reserved.
+// <copyright file="ExtractArchivesStep.cs" company="YouSource Inc.">
+//     Copyright (c) YouSource Inc.. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 namespace MTNDataAnalysis.Chain
 {
-    using System.IO;
-    using MTNDataAnalysis.Context;
     using System;
+    using System.IO;
     using Ebixio.LZW;
-
+    using MTNDataAnalysis.Context;
+    
     /// <summary>
     /// Extracts the files
     /// </summary>
@@ -31,14 +31,16 @@ namespace MTNDataAnalysis.Chain
             {
                 foreach (FileInfo fileToDecompress in files)
                 {
-                    //this.Decompress(context.ExtractorFilePath, fileToDecompress, context.StagingPath);
                     try
                     {
                         this.Decompress(fileToDecompress, context.StagingPath);
                     }
-                    catch
-                    { }
-                    context.OnProcessStepChanged("Extracting from archive:" + fileToDecompress.Name , false);
+                    catch 
+                    { 
+                        ////Skip File
+                    }
+
+                    context.OnProcessStepChanged("Extracting from archive:" + fileToDecompress.Name, false);
                     context.OnProcessProgressChanged(Convert.ToInt32(Math.Round((double)++fileCounter / files.Length * 100)));
                 }
 
@@ -71,6 +73,11 @@ namespace MTNDataAnalysis.Chain
             p.WaitForExit();
         }
 
+        /// <summary>
+        /// Decompresses the specified file to decompress using LZW Decompression .
+        /// </summary>
+        /// <param name="fileToDecompress">The file to decompress.</param>
+        /// <param name="outputFolder">The output folder.</param>
         private void Decompress(FileInfo fileToDecompress, string outputFolder)
         {
             byte[] buffer = new byte[4096];

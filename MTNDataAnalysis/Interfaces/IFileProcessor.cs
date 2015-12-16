@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="IFileProcessor.cs" company="Global Supply Chain Services (Ltd)">
-//     Copyright (c) GlobalTrack. All rights reserved.
+// <copyright file="IFileProcessor.cs" company="YouSource Inc.">
+//     Copyright (c) YouSource Inc.. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 namespace MTNDataAnalysis.Interfaces

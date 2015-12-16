@@ -1,17 +1,16 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Aggregator.cs" company="Global Supply Chain Services (Ltd)">
-//     Copyright (c) GlobalTrack. All rights reserved.
+// <copyright file="SummarizeStep.cs" company="YouSource Inc.">
+//     Copyright (c) YouSource Inc.. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 namespace MTNDataAnalysis.Chain
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using MTNDataAnalysis.Context;
-    using MTNDataAnalysis.Models;
     using MTNDataAnalysis.Helpers;
+    using MTNDataAnalysis.Models;
 
     /// <summary>
     /// Aggregate the data
@@ -37,23 +36,21 @@ namespace MTNDataAnalysis.Chain
 
             if (context.GroupByField == "PhoneNumber")
             {
-                callDataSummary = GetSummaryByPhoneNumber(callDataRecords);
+                callDataSummary = this.GetSummaryByPhoneNumber(callDataRecords);
             }
             else if (context.GroupByField == "IMEI")
             {
-                callDataSummary = GetSummaryByCallIMEI(callDataRecords);
+                callDataSummary = this.GetSummaryByCallIMEI(callDataRecords);
             }
 
-            context.EndTime = DateTime.Now;
-            context.CallDataSummary = callDataSummary;
+            this.context.EndTime = DateTime.Now;
+            this.context.CallDataSummary = callDataSummary;
             
-            if (base.Successor != null)
+            if (this.Successor != null)
             {
-                Successor.Process(context);
+                this.Successor.Process(this.context);
             }
         }
-
-       
 
         /// <summary>
         /// Gets the summary by phone number.
@@ -67,19 +64,20 @@ namespace MTNDataAnalysis.Chain
                          {
                              r.BillingPeriod,
                              r.PhoneNumber
-                         } into gcdr
+                         } 
+                         into gcdr
                          select new CallDataSummary()
-                       {
+                         {
                            BillingPeriod = gcdr.Key.BillingPeriod,
                            GroupingField = gcdr.Key.PhoneNumber,
                            HumanReadableSum = Helpers.BytesToString((long)gcdr.Sum(r => r.DataVolume)),
                            SumInBytes = (long)gcdr.Sum(r => r.DataVolume)
-                       };
+                         };
             return result;
         }
 
         /// <summary>
-        /// Gets the summary by call imei.
+        /// Gets the summary by call IMEI.
         /// </summary>
         /// <param name="callDataRecords">The call data records.</param>
         /// <returns>Summarized Call Data by CallIMEI</returns>
@@ -90,8 +88,8 @@ namespace MTNDataAnalysis.Chain
                           {
                               r.BillingPeriod,
                               r.CallIMEI
-                          } into gcdr
-
+                          } 
+                          into gcdr
                           select new CallDataSummary()
                           {
                               BillingPeriod = gcdr.Key.BillingPeriod,

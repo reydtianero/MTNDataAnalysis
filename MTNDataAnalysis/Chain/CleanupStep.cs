@@ -1,9 +1,8 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Cleaner.cs" company="Global Supply Chain Services (Ltd)">
-//     Copyright (c) GlobalTrack. All rights reserved.
+// <copyright file="CleanupStep.cs" company="YouSource Inc.">
+//     Copyright (c) YouSource Inc.. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
-
 
 namespace MTNDataAnalysis.Chain
 {
@@ -12,12 +11,18 @@ namespace MTNDataAnalysis.Chain
     using MTNDataAnalysis.Context;
     using MTNDataAnalysis.Helpers;
 
+    /// <summary>
+    /// Deletes staging data(i.e. decompressed files from archive)
+    /// </summary>
     public class CleanupStep : BaseHandler<CallDataRecordContext>
     {
+        /// <summary>
+        /// Delete staging data
+        /// </summary>
+        /// <param name="context">The context.</param>
         public override void Process(CallDataRecordContext context)
         {
-
-            if (Directory.Exists(context.StagingPath)) //&& IOHelpers.DirectoryHasPermission(context.StagingPath, FileSystemRights.DeleteSubdirectoriesAndFiles))
+            if (Directory.Exists(context.StagingPath))
             {
                 context.OnProcessStepChanged("Cleaning Up...", false);
                 var thisDirectory = new DirectoryInfo(context.StagingPath);
@@ -25,6 +30,5 @@ namespace MTNDataAnalysis.Chain
                 context.OnProcessStepChanged("Done!", true);
             }
         }
-
     }
 }

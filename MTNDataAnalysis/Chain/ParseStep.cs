@@ -1,24 +1,30 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Parser.cs" company="Global Supply Chain Services (Ltd)">
-//     Copyright (c) GlobalTrack. All rights reserved.
+// <copyright file="ParseStep.cs" company="YouSource Inc.">
+//     Copyright (c) YouSource Inc.. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 namespace MTNDataAnalysis.Chain
 {
-    using MTNDataAnalysis.Context;
-    using MTNDataAnalysis.Models;
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Data;
-    using MTNDataAnalysis.Properties;
+    using MTNDataAnalysis.Context;
+    using MTNDataAnalysis.Models;
     
+    /// <summary>
+    /// Parses the files into the Enumerable in context
+    /// </summary>
     public class ParseStep : BaseHandler<CallDataRecordContext>
     {
+        /// <summary>
+        /// The context
+        /// </summary>
         private CallDataRecordContext context;
+
+        /// <summary>
+        /// Processes the specified context.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public override void Process(CallDataRecordContext context)
         {
             int fileCounter = 0;
@@ -33,10 +39,10 @@ namespace MTNDataAnalysis.Chain
             {
                 string fileRemarks = string.Empty;
                 FileInfo fileInProcess = new FileInfo(f);
-                context.OnProcessProgressChanged(Convert.ToInt32(Math.Round((double)++fileCounter / files.Length * 100)));
-                if (ValidateFile(fileInProcess, out fileRemarks))
+                this.context.OnProcessProgressChanged(Convert.ToInt32(Math.Round((double)++fileCounter / files.Length * 100)));
+                if (this.ValidateFile(fileInProcess, out fileRemarks))
                 {
-                    ReadFileToModel(fileInProcess);
+                    this.ReadFileToModel(fileInProcess);
                 }
                 else
                 {
@@ -47,32 +53,35 @@ namespace MTNDataAnalysis.Chain
                 }
             }
 
-            if (Successor != null)
+            if (this.Successor != null)
             {
-                Successor.Process(context);
+                this.Successor.Process(this.context);
             }
         }
 
+        /// <summary>
+        /// Reads the file to model.
+        /// </summary>
+        /// <param name="file">The file.</param>
         private void ReadFileToModel(FileInfo file)
         {
             FileSummary dataFileSummary = new FileSummary();
             StreamReader fileReader = file.OpenText();
             CallData callData = default(CallData);
-            //get Header
+            
             var line = fileReader.ReadLine();
             int headerCount;
             int year;
             int month;
             int day;
-            int rowCount = 0 ;
+            int rowCount = 0;
 
             int.TryParse(line.Substring(21, 10), out headerCount);
             dataFileSummary.FileName = file.Name;
             dataFileSummary.HeaderCount = headerCount;
             
-            while((line = fileReader.ReadLine())[0]!='T')
+            while ((line = fileReader.ReadLine())[0] != 'T')
             {
-
                 callData = new CallData();
                 callData.FileName = file.Name;
                 callData.PhoneNumber = line.Substring(0, 11);
@@ -83,10 +92,10 @@ namespace MTNDataAnalysis.Chain
                 int.TryParse(line.Substring(15, 2), out month);
                 int.TryParse(line.Substring(17, 2), out day);
 
-                callData.CallDateTime = new DateTime(year,month,day).Add(TimeSpan.Parse(line.Substring(19, 8)));
+                callData.CallDateTime = new DateTime(year, month, day).Add(TimeSpan.Parse(line.Substring(19, 8)));
                 callData.DataVolume = Convert.ToDecimal(line.Substring(103, 14));
 
-                context.CallDataRecords.Add(callData);
+                this.context.CallDataRecords.Add(callData);
                 rowCount++;
             }
 
@@ -95,9 +104,14 @@ namespace MTNDataAnalysis.Chain
             
             this.context.FileSummary.Add(dataFileSummary);
             fileReader.Close();
-
         }
 
+        /// <summary>
+        /// Validates the file.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        /// <param name="fileErrors">The file errors.</param>
+        /// <returns> true / false </returns>
         private bool ValidateFile(FileInfo file, out string fileErrors)
         {
             StreamReader fileReader = file.OpenText();
@@ -106,13 +120,13 @@ namespace MTNDataAnalysis.Chain
 
             try
             {
-
-                if (!CheckHeader(fileReader))
+                if (!this.CheckHeader(fileReader))
                 {
                     isValid = false;
                     fileErrors = "Invalid File Header";
                 }
-                if (!CheckTrailer(fileReader))
+
+                if (!this.CheckTrailer(fileReader))
                 {
                     isValid = false;
                     fileErrors = fileErrors + ";" + "Invalid File Trailer";
@@ -124,10 +138,14 @@ namespace MTNDataAnalysis.Chain
                 fileErrors = fileErrors + ";" + "Invalid File Format";
             }
 
-
             return isValid;
         }
 
+        /// <summary>
+        /// Checks the trailer.
+        /// </summary>
+        /// <param name="fileReader">The file reader.</param>
+        /// <returns>true / false</returns>
         private bool CheckTrailer(StreamReader fileReader)
         {
             var isValid = true;
@@ -141,6 +159,11 @@ namespace MTNDataAnalysis.Chain
             return isValid;
         }
 
+        /// <summary>
+        /// Checks the header.
+        /// </summary>
+        /// <param name="fileReader">The file reader.</param>
+        /// <returns>true when header is valid</returns>
         private bool CheckHeader(StreamReader fileReader)
         {
             var isValid = true;

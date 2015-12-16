@@ -1,32 +1,23 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="MainForm.cs" company="Global Supply Chain Services (Ltd)">
-//     Copyright (c) GlobalTrack. All rights reserved.
+// <copyright file="MainForm.cs" company="YouSource Inc.">
+//     Copyright (c) YouSource Inc.. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 namespace MTNDataAnalysis
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
+    using System.IO;
     using System.Windows.Forms;
-    using System.Windows.Threading;
     using MTNDataAnalysis.Chain;
     using MTNDataAnalysis.Context;
     using MTNDataAnalysis.Helpers;
-    using System.IO;
 
     /// <summary>
     /// Main User Interface
     /// </summary>
     public partial class MainForm : Form
     {
-        private static System.Timers.Timer ProgressTimer; 
         /// <summary>
         /// The start of chain
         /// </summary>
@@ -67,7 +58,7 @@ namespace MTNDataAnalysis
         /// </summary>
         public MainForm()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         /// <summary>
@@ -77,7 +68,7 @@ namespace MTNDataAnalysis
         /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void ProcessButton_Click(object sender, EventArgs e)
         {
-            StartProcess("IMEI");
+            this.StartProcess("IMEI");
         }
 
         /// <summary>
@@ -148,7 +139,6 @@ namespace MTNDataAnalysis
                 txtOutputFolder.Text = folderDialog.SelectedPath;
             }
         }
-
        
         /// <summary>
         /// Handles the Click event of the Extractor Browse Button control.
@@ -182,11 +172,10 @@ namespace MTNDataAnalysis
         /// <param name="e">The <see cref="DoWorkEventArgs"/> instance containing the event data.</param>
         private void ProgressUpdateBGWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-          
-            context.ProcessProgressChanged += Context_ProcessProgressChanged;
-            context.ProcessStepChanged += Context_ProcessStepChanged;
+            this.context.ProcessProgressChanged += this.Context_ProcessProgressChanged;
+            this.context.ProcessStepChanged += this.Context_ProcessStepChanged;
 
-            this.startOfChain = CreateChain();
+            this.startOfChain = this.CreateChain();
             this.startOfChain.Process(this.context);
         }
 
@@ -209,9 +198,8 @@ namespace MTNDataAnalysis
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="ProgressChangedEventArgs"/> instance containing the event data.</param>
-        private void progressUpdateBGWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void ProgressUpdateBGWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            /* display */
             this.overAllProgressBar.Value = e.ProgressPercentage;
             this.lblPercentage.Text = e.ProgressPercentage + "%";
         }
@@ -245,7 +233,7 @@ namespace MTNDataAnalysis
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SummarizeBySIMButton_Click(object sender, EventArgs e)
         {
-            StartProcess("PhoneNumber");
+            this.StartProcess("PhoneNumber");
         }
     }
 }
