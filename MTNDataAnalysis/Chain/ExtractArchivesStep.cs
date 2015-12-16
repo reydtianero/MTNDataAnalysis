@@ -13,7 +13,7 @@ namespace MTNDataAnalysis.Chain
     /// <summary>
     /// Extracts the files
     /// </summary>
-    public class Extractor : BaseHandler<CallDataRecordContext>
+    public class ExtractArchivesStep : BaseHandler<CallDataRecordContext>
     {
         /// <summary>
         /// Processes the specified context.
@@ -38,6 +38,7 @@ namespace MTNDataAnalysis.Chain
                     }
                     catch
                     { }
+                    context.OnProcessStepChanged("Extracting from archive:" + fileToDecompress.Name , false);
                     context.OnProcessProgressChanged(Convert.ToInt32(Math.Round((double)++fileCounter / files.Length * 100)));
                 }
 

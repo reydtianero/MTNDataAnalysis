@@ -49,12 +49,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chain\Aggregator.cs" />
-    <Compile Include="Chain\Cleaner.cs" />
-    <Compile Include="Chain\Extractor.cs" />
+    <Compile Include="Chain\SummarizeStep.cs" />
+    <Compile Include="Chain\CleanupStep.cs" />
+    <Compile Include="Chain\ExtractArchivesStep.cs" />
     <Compile Include="Chain\BaseHandler.cs" />
-    <Compile Include="Chain\Initializer.cs" />
-    <Compile Include="Chain\Parser.cs" />
+    <Compile Include="Chain\InitializeStep.cs" />
+    <Compile Include="Chain\ParseStep.cs" />
+    <Compile Include="Chain\WriteToFilesStep.cs" />
     <Compile Include="Context\BaseContext.cs" />
     <Compile Include="Context\CallDataRecordContext.cs" />
     <Compile Include="Helpers\LzwInputStream.cs" />

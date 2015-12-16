@@ -16,7 +16,7 @@ namespace MTNDataAnalysis.Chain
     using System.Data;
     using MTNDataAnalysis.Properties;
     
-    public class Parser : BaseHandler<CallDataRecordContext>
+    public class ParseStep : BaseHandler<CallDataRecordContext>
     {
         private CallDataRecordContext context;
         public override void Process(CallDataRecordContext context)

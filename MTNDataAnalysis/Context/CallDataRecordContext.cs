@@ -56,6 +56,14 @@ namespace MTNDataAnalysis.Context
         public IList<CallData> CallDataRecords { get; set; }
 
         /// <summary>
+        /// Gets or sets the call data summary.
+        /// </summary>
+        /// <value>
+        /// The call data summary.
+        /// </value>
+        public IEnumerable<CallDataSummary> CallDataSummary { get; set; }
+
+        /// <summary>
         /// Gets or sets the processing result of each file
         /// </summary>
         /// <value>
@@ -111,6 +119,28 @@ namespace MTNDataAnalysis.Context
             }
         }
 
+        /// <summary>
+        /// Gets or sets the [group by] field for the summary.
+        /// </summary>
+        /// <value>
+        /// The group by field.
+        /// </value>
         public string GroupByField { get; set; }
+
+        /// <summary>
+        /// Gets or sets the start time.
+        /// </summary>
+        /// <value>
+        /// The start time.
+        /// </value>
+        public DateTime StartTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the end time.
+        /// </summary>
+        /// <value>
+        /// The end time.
+        /// </value>
+        public DateTime EndTime { get; set; }
     }
 }

@@ -35,21 +35,32 @@ namespace MTNDataAnalysis
         /// <summary>
         /// The extractor
         /// </summary>
-        private BaseHandler<CallDataRecordContext> extractor;
+        private BaseHandler<CallDataRecordContext> extractStep;
 
         /// <summary>
         /// The parser
         /// </summary>
-        private BaseHandler<CallDataRecordContext> parser;
+        private BaseHandler<CallDataRecordContext> parseStep;
 
         /// <summary>
         /// The aggregator
         /// </summary>
-        private BaseHandler<CallDataRecordContext> aggregator;
+        private BaseHandler<CallDataRecordContext> summarizeStep;
 
-        private Cleaner cleaner;
+        /// <summary>
+        /// The cleaner
+        /// </summary>
+        private CleanupStep cleanupStep;
 
+        /// <summary>
+        /// The context
+        /// </summary>
         private CallDataRecordContext context;
+
+        /// <summary>
+        /// The write to file step
+        /// </summary>
+        private WriteToFilesStep writeToFileStep;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
@@ -58,14 +69,6 @@ namespace MTNDataAnalysis
         {
             InitializeComponent();
         }
-
-        /// <summary>
-        /// Delegate for progress event
-        /// </summary>
-        /// <param name="stepName">Name of the step.</param>
-        /// <param name="progressValue">The progress value.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        public delegate void ProgressHanlder(string stepName, int progressValue, EventArgs e);
 
         /// <summary>
         /// Handles the Click event of the ProcessButton control.
@@ -77,12 +80,17 @@ namespace MTNDataAnalysis
             StartProcess("IMEI");
         }
 
+        /// <summary>
+        /// Starts the process.
+        /// </summary>
+        /// <param name="groupByField">The group by field.</param>
         private void StartProcess(string groupByField)
         {
             this.context = new CallDataRecordContext(txtInputFolder.Text, txtExtractor.Text)
             {
                 OutputPath = txtOutputFolder.Text,
-                GroupByField = groupByField
+                GroupByField = groupByField,
+                StartTime = DateTime.Now
             };
 
             this.InputPanel.Enabled = false;
@@ -98,17 +106,19 @@ namespace MTNDataAnalysis
         /// </returns>
         private BaseHandler<CallDataRecordContext> CreateChain()
         {
-            this.startOfChain = new Initializer();
-            this.extractor = new Extractor();
-            this.parser = new Parser();
-            this.aggregator = new Aggregator();
-            this.cleaner = new Cleaner();
+            this.startOfChain = new InitializeStep();
+            this.extractStep = new ExtractArchivesStep();
+            this.parseStep = new ParseStep();
+            this.summarizeStep = new SummarizeStep();
+            this.writeToFileStep = new WriteToFilesStep();
+            this.cleanupStep = new CleanupStep();
 
-            this.startOfChain.SetSuccessor(this.extractor);
+            this.startOfChain.SetSuccessor(this.extractStep);
             
-            this.extractor.SetSuccessor(this.parser);
-            this.parser.SetSuccessor(this.aggregator);
-            this.aggregator.SetSuccessor(this.cleaner);
+            this.extractStep.SetSuccessor(this.parseStep);
+            this.parseStep.SetSuccessor(this.summarizeStep);
+            this.summarizeStep.SetSuccessor(this.writeToFileStep);
+            this.writeToFileStep.SetSuccessor(this.cleanupStep);
             return this.startOfChain;
         }
 
@@ -156,11 +166,20 @@ namespace MTNDataAnalysis
             }
         }
 
+        /// <summary>
+        /// Context_s the process progress changed.
+        /// </summary>
+        /// <param name="progress">The progress.</param>
         private void Context_ProcessProgressChanged(int progress)
         {
             this.progressUpdateBGWorker.ReportProgress(progress);
         }
 
+        /// <summary>
+        /// Handles the DoWork event of the ProgressUpdateBGWorker control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DoWorkEventArgs"/> instance containing the event data.</param>
         private void ProgressUpdateBGWorker_DoWork(object sender, DoWorkEventArgs e)
         {
           
@@ -171,6 +190,11 @@ namespace MTNDataAnalysis
             this.startOfChain.Process(this.context);
         }
 
+        /// <summary>
+        /// Context_s the process step changed.
+        /// </summary>
+        /// <param name="step">The step.</param>
+        /// <param name="abort">if set to <c>true</c> [abort].</param>
         private void Context_ProcessStepChanged(string step, bool abort)
         {
             this.BeginInvoke((Action)(() => this.StepLabel.Text = step));
@@ -180,6 +204,11 @@ namespace MTNDataAnalysis
             }
         }
 
+        /// <summary>
+        /// Handles the ProgressChanged event of the progressUpdateBGWorker control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="ProgressChangedEventArgs"/> instance containing the event data.</param>
         private void progressUpdateBGWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             /* display */
@@ -187,11 +216,11 @@ namespace MTNDataAnalysis
             this.lblPercentage.Text = e.ProgressPercentage + "%";
         }
 
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// Handles the Load event of the MainForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void MainForm_Load(object sender, EventArgs e)
         {
             var defaultDataDirectory = Application.StartupPath + "\\Data";
@@ -209,6 +238,11 @@ namespace MTNDataAnalysis
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the SummarizeBySIMButton control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SummarizeBySIMButton_Click(object sender, EventArgs e)
         {
             StartProcess("PhoneNumber");

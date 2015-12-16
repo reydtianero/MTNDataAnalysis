@@ -14,7 +14,7 @@ namespace MTNDataAnalysis.Chain
     /// <summary>
     /// Check for folder access and create staging directory
     /// </summary>
-    public class Initializer : BaseHandler<CallDataRecordContext>
+    public class InitializeStep : BaseHandler<CallDataRecordContext>
     {
         /// <summary>
         /// Processes this instance.

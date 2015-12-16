@@ -19,39 +19,18 @@ namespace MTNDataAnalysis.Helpers
     public static class Helpers
     {
         /// <summary>
-        /// Directories the has permission.
+        /// Sets the property in GUI thread.
         /// </summary>
-        /// <param name="directoryPath">The directory path.</param>
-        /// <param name="accessRight">The access right.</param>
-        /// <returns>True if user has the Access Right to the Directory Path</returns>
-        public static bool DirectoryHasPermission(string directoryPath, FileSystemRights accessRight)
-        {
-            var result = false; 
-            if (string.IsNullOrEmpty(directoryPath)) 
-            {
-                result = false;
-            }
-
-            AuthorizationRuleCollection rules = Directory.GetAccessControl(directoryPath).GetAccessRules(true, true, typeof(System.Security.Principal.SecurityIdentifier));
-            WindowsIdentity identity = WindowsIdentity.GetCurrent();
-
-            foreach (FileSystemAccessRule rule in rules)
-            {
-                if (identity.Groups.Contains(rule.IdentityReference))
-                {
-                    if ((accessRight & rule.FileSystemRights) == accessRight)
-                    {
-                        if (rule.AccessControlType == AccessControlType.Allow)
-                        { 
-                            result = true; 
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-
+        /// <typeparam name="C"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="control">The control.</param>
+        /// <param name="property">The property.</param>
+        /// <param name="value">The value.</param>
+        /// <exception cref="ArgumentException">
+        /// The 'property' expression must specify a property on the control.
+        /// or
+        /// The 'property' expression must specify a property on the control.
+        /// </exception>
         public static void SetPropertyInGuiThread<C, V>(this C control, Expression<Func<C, V>> property, V value) where C : Control
         {
             var memberExpression = property.Body as MemberExpression;
@@ -71,6 +50,11 @@ namespace MTNDataAnalysis.Helpers
                 propertyInfo.SetValue(control, value, null);
         }
 
+        /// <summary>
+        /// Byteses to string.
+        /// </summary>
+        /// <param name="byteCount">The byte count.</param>
+        /// <returns>Returns a human readable file size</returns>
         public static string BytesToString(long byteCount)
         {
             string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB

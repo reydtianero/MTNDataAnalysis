@@ -16,7 +16,7 @@ namespace MTNDataAnalysis.Chain
     /// <summary>
     /// Aggregate the data
     /// </summary>
-    public class Aggregator : BaseHandler<CallDataRecordContext>
+    public class SummarizeStep : BaseHandler<CallDataRecordContext>
     {
         /// <summary>
         /// The context of the chain
@@ -44,32 +44,23 @@ namespace MTNDataAnalysis.Chain
                 callDataSummary = GetSummaryByCallIMEI(callDataRecords);
             }
 
-            WriteToFile(callDataSummary);
-
+            context.EndTime = DateTime.Now;
+            context.CallDataSummary = callDataSummary;
+            
             if (base.Successor != null)
             {
                 Successor.Process(context);
             }
         }
 
-        private void WriteToFile(IEnumerable<CallDataSummary> callDataSummary)
-        {
-            string filename = this.context.OutputPath + "\\CDR_Summary_By_" + context.GroupByField + "_" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".csv";
-            StreamWriter fileWriter = File.AppendText(filename);
-            fileWriter.WriteLine("Billing Period," + context.GroupByField + ", Data Volume, In Bytes");
+       
 
-            foreach (var c in callDataSummary)
-            {
-                fileWriter.WriteLine(c.BillingPeriod + ", " + c.GroupingField.ToString() + "," + c.HumanReadableSum.ToString() + "," + c.SumInBytes.ToString());
-            }
-
-            fileWriter.Close();
-
-            System.Diagnostics.Process.Start(this.context.OutputPath);
-        }
-
-
-        public static IEnumerable<CallDataSummary> GetSummaryByPhoneNumber(List<CallData> callDataRecords)
+        /// <summary>
+        /// Gets the summary by phone number.
+        /// </summary>
+        /// <param name="callDataRecords">The call data records.</param>
+        /// <returns>Summarized Call Data by PhoneNumber</returns>
+        private IEnumerable<CallDataSummary> GetSummaryByPhoneNumber(List<CallData> callDataRecords)
         {
             var result = from r in callDataRecords
                          group r by new
@@ -87,8 +78,12 @@ namespace MTNDataAnalysis.Chain
             return result;
         }
 
-
-        public static IEnumerable<CallDataSummary> GetSummaryByCallIMEI(List<CallData> callDataRecords)
+        /// <summary>
+        /// Gets the summary by call imei.
+        /// </summary>
+        /// <param name="callDataRecords">The call data records.</param>
+        /// <returns>Summarized Call Data by CallIMEI</returns>
+        private IEnumerable<CallDataSummary> GetSummaryByCallIMEI(List<CallData> callDataRecords)
         {
             var result = (from r in callDataRecords
                           group r by new

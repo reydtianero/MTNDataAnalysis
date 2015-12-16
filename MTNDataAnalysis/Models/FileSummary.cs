@@ -32,14 +32,6 @@ namespace MTNDataAnalysis.Models
         public int HeaderCount { get; set; }
 
         /// <summary>
-        /// Gets or sets the records found.
-        /// </summary>
-        /// <value>
-        /// The records found.
-        /// </value>
-        public int RecordsFound { get; set; }
-
-        /// <summary>
         /// Gets or sets the records processed.
         /// </summary>
         /// <value>

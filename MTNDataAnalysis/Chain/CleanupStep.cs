@@ -12,7 +12,7 @@ namespace MTNDataAnalysis.Chain
     using MTNDataAnalysis.Context;
     using MTNDataAnalysis.Helpers;
 
-    public class Cleaner : BaseHandler<CallDataRecordContext>
+    public class CleanupStep : BaseHandler<CallDataRecordContext>
     {
         public override void Process(CallDataRecordContext context)
         {
@@ -21,7 +21,7 @@ namespace MTNDataAnalysis.Chain
             {
                 context.OnProcessStepChanged("Cleaning Up...", false);
                 var thisDirectory = new DirectoryInfo(context.StagingPath);
-               // thisDirectory.Delete(true);
+                thisDirectory.Delete(true);
                 context.OnProcessStepChanged("Done!", true);
             }
         }
